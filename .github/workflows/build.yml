@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -28,23 +28,9 @@ jobs:
           ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
           SPACE_ID: ${{secrets.SPACE_ID}}
 
-  starter-check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Read .nvmrc
-        id: node_version
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
-
-      - name: Setup node
-        uses: actions/setup-node@v1
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          node-version: ${{ steps.node_version.outputs.NODE_VERSION }}
-
-      - run: npx gatsby new mate-portfolio https://github.com/EmaSuriano/gatsby-starter-mate
-
-      - run: yarn build
-        working-directory: ./mate-portfolio
-        env:
-          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
-          SPACE_ID: ${{secrets.SPACE_ID}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          cname: philomene.vergnol.eu
